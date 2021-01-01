@@ -8,13 +8,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegistroController extends AbstractController
 {
     /**
      * @Route("/registro", name="registro")
      */
-    public function index(Request $request): Response //recibo la solicitud por parametro  
+    public function index(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response //recibo la solicitud por parametro, asigno en una variable lo que importé de la librería para cifrar la password  
     {
         $user = new User(); //Creo un User
         $form = $this->createForm(UserType::class, $user);//Creo un formulario
@@ -23,7 +24,9 @@ class RegistroController extends AbstractController
             $em = $this->getDoctrine()->getManager();//Permite persistir los datos, es decir, guardar, borrar o actualizar en la BD
             $user->setBaneado(false);//seteo en false el baneado
             $user->setRoles(['ROLE_USER']);//Seteo un rol (se debe pasrar como array)
-            //tanto el campo "baneado" como el "roles" los saqué del formulario para que no los ingrese el usuario, pero como no pueden ser null los seteo acá 
+            //tanto el campo "baneado" como el "roles" los saqué del formulario para que no los ingrese el usuario, pero como no pueden ser null los seteo acá
+            $user->setPassword($passwordEncoder->encodePassword($user, $form['password']->getData()));//seteo para cifrar la password usando la librería
+            // con "$form['password']->getData()" obtengo la contraseña que el usuario ingresó a través del formulario (password es el nombre del campo en el formulario)
             $em->persist($user);//Le digo que persista el user creado y que fue cargado con los datos obttenidos a través del formulario
             $em->flush();//  ¿¿¿???
             $this->addFlash('exito','Se ha registrado exitosamente');//Envío un mansaje a través de la variable (o llave de acceso) "exito" avisando que se registró
