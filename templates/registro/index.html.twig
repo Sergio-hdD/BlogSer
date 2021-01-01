@@ -3,5 +3,10 @@
 {% block title %}Hello RegistroController!{% endblock %}
 
 {% block body %}
-{{form(formulario)}}
+    {% for message in app.flashes('exito') %} {# "exito" es la variable o llave de acceso a través de la cual llega el mensaje desde el controller#}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {{form(formulario)}}
 {% endblock %}
