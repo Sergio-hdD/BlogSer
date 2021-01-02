@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    const REGISTRO_EXITOSO = 'Se ha registrado exitosamente';//creo una constante para enviar un mensaje (es buena práctica de programación hacerlo así cuando son cosas que no van a cambiar)
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -63,7 +64,13 @@ class User implements UserInterface
      */
     private $profesiones;
 
-
+    public function __construct()//Creo un cronstructor que inicie dos variables con valor
+    {
+        $this->baneado = false;
+        $this->roles = ['ROLE_USER'];
+    }//Con esto al hacer "new User()", baneado será false y el rol será ROLE_USER
+    //Tanto el campo "baneado" como el "roles" los saqué del formulario para que no los ingrese el usuario, pero como no pueden ser null los inicializo acá
+    //Es buena práctica de programación hacerlo así y no seteandolos en el RewistroController, como los había hecho 
     public function getId(): ?int
     {
         return $this->id;
