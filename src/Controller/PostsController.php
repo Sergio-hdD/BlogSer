@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Posts;
 use App\Form\PostsType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +21,27 @@ class PostsController extends AbstractController
         $form = $this->createForm(PostsType::class, $post);//a través del formulario tomo los datos para el post
         $form->handleRequest($request);//verifico si el formulario fue enviado
         if($form->isSubmitted() && $form->isValid()){//Si fue enviado is es válido
+            $brochureFile = $form->get('foto')->getData();
+            if ($brochureFile) {
+                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $brochureFile->move(
+                        $this->getParameter('photos_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    throw new \Exception('Ups! ha ocurrido un error, sorry :C');
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $post->setFoto($newFilename);
+            }
             $user = $this->getUser();//obtengo el usuario logeado
             $post->setUser($user);//seteo el user del post con el usuario logueado
             $em = $this->getDoctrine()->getManager();//Es lo que me va a permitir hace ABM y/o consultas a la BD
