@@ -54,6 +54,16 @@ class Posts
      */
     private $user;    
 
+    /**
+     * Posts constructor.
+     */
+    public function __construct()
+    {
+       $this->likes = '';//inicia vacío, no es lo mismo que null
+       $this->fecha_publicacion = new \DateTime(); //inicia con la fecha actual
+    }//Los inicializo acá porque los saqué del formulario pero no pueden ser null
+    //Tambien debería estar el user, pero se debe hacer aquí ya que es dinámico, lo hago en
+    // el PostsController aprovechando que posts tiene un user
     
     public function getId(): ?int
     {
@@ -119,4 +129,37 @@ class Posts
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
+
 }

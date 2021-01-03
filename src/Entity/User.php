@@ -63,7 +63,10 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Profesion", mappedBy="user")
      */
     private $profesiones;
-
+    
+    /**
+     * User constructor.
+     */
     public function __construct()//Creo un cronstructor que inicie dos variables con valor
     {
         $this->baneado = false;
