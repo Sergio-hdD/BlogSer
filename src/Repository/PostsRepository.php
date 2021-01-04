@@ -19,6 +19,17 @@ class PostsRepository extends ServiceEntityRepository
         parent::__construct($registry, Posts::class);
     }
 
+   //Consulta personalizada para traer solo los campos que voy a usar
+   //Ya que si traigo con un "findAll()" me trae todos los campos incluyendo los
+   //que no voy a usar con lo que se sobrecarga el servidor 
+    public function traerTodosLosPosts(){
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT post.id, post.titulo, post.foto, post.fecha_publicacion
+                From App:Posts post'
+            )->getResult();//"post" es un alias y con el "->getResult()" estoy diciendo que duvuelva lo obtenido de la consulta
+    }//Symfony usa dql para hacer consultas
+
     // /**
     //  * @return Posts[] Returns an array of Posts objects
     //  */

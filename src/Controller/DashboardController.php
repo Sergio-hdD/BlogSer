@@ -15,15 +15,9 @@ class DashboardController extends AbstractController
     public function index(): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $posts = $em->getRepository(Posts::class)->findAll();//Traigo todos los posts
-        $postId = $em->getRepository(Posts::class)->find(2);//Traigo el post con id = 2
-        $postTit = $em->getRepository(Posts::class)->findOneBy(['titulo'=>'Primer foto']);//Traigo uno por valor de un campo
-        $postLikes = $em->getRepository(Posts::class)->findBy(['likes'=>'']);//Traigo varios por valor de un campo, en este caso los que tengan los likes vacios
+        $posts = $em->getRepository(Posts::class)->traerTodosLosPosts();//Traigo todos los posts, consulta personalizada
         return $this->render('dashboard/index.html.twig', [
-            'posts' => $posts,
-            'postPorId' => $postId,
-            'postPorTit' => $postTit,
-            'postsPorLikes' => $postLikes
+            'posts' => $posts
         ]);
     }
 }
