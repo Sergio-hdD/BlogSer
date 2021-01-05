@@ -4,35 +4,38 @@
 
 {% block body %}
     {{ parent() }}{# traigo el código o texto que hay en el block body en el "base.html.twig" #}
-    {{ dump(pagination) }}
-    {# total items count #}
-    <div class="count">
-        {{ pagination.getTotalItemCount }}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 cursor">
+                {% for post in pagination %}
+                    <div class="bg-white rounded p-3 my-3"  onclick="window.location.href='{{ path('ver_Post',{id:post.id}) }}'">{# linkeo a través del name del controller, pasando el id como parametro #}
+                        <div class="d-flex bd-highlight">
+                            <div class="p-2 flex-grow-1 bd-highlight">
+                                <h3>{{ post.titulo }}</h3>
+                                <div class="my-3 bg-yellow"> <i class="fa fa-user"></i><strong> Creado por {{ post.nombre }}</strong></div>
+                                <div class=" bg-green"><i class="far fa-clock"></i> <strong>Fecha de publicación: {{ post.fecha_publicacion | date }}</strong></div>
+                                {# el "| date" es un parseo, ya que "fecha_plublicacion" llega como date, pero el template solo muestra String  #}
+                            </div>
+                            <div class="p-2 bd-highlight">
+                                <div class="align-self-center">
+                                    <img class="rounded" src="{{ asset('uploads/photos/'~post.foto) }}" width="150px">
+                                    {# con "asset" voy hasta "public", continuo la ruta hasta "photos" y concateno con el nombre (usando "~") #}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                <div class="bg-white rounded p-3 my-3">
+                    <h4>Comentarios</h4>
+                </div>
+            </div>
+        </div>
     </div>
-    <table>
-        <tr>
-            {# sorting of properties based on query components #}
-            <th>{{ knp_pagination_sortable(pagination, 'Id', 'a.id') }}</th>
-            <th{% if pagination.isSorted('a.Title') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(pagination, 'Title', 'a.title') }}
-            </th>
-            <th{% if pagination.isSorted(['a.date', 'a.time']) %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(pagination, 'Release', ['a.date', 'a.time']) }}
-            </th>
-        </tr>
-
-        {# table body #}
-        {% for article in pagination %}
-            <tr {% if loop.index is odd %}class="color"{% endif %}>
-                <td>{{ article.id }}</td>
-                <td>{{ article.titulo }}</td>
-                <td>{{ article.foto }}</td>
-                <td>{{ article.fecha_publicacion | date('Y-m-d') }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    {# display navigation #}
-    <div class="navigation">
-        {{ knp_pagination_render(pagination) }}
+    <div class="d-flex justify-content-center">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
     </div>
 {% endblock %}
