@@ -53,4 +53,17 @@ class PostsController extends AbstractController
             'formulario' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/post/{id}", name="ver_Post")
+     */
+    public function verPost($id){
+        $em = $this->getDoctrine()->getManager();
+        $post =$em->getRepository(Posts::class)->find($id);
+        return $this->render('posts/verPost.html.twig',['post'=>$post]);
+    }
 }
+
+
+
+
