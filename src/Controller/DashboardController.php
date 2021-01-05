@@ -11,8 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractController
 {
+    //estaba así @Route("/dashboard", name="dashboard"), pero lo cambié para que sea la homepage
     /**
-     * @Route("/dashboard", name="dashboard")
+     * @Route("/", name="dashboard")
      */
     public function index(PaginatorInterface $paginator, Request $request): Response
     {

@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {# con esta linea le digo que herede todos los block del "base.html.twig" #}
 
-{% block title %}Hello DashboardController!{% endblock %}
+{% block title %}{{ parent() }} - Dashboard{% endblock %} {# con el "parent()" traigo lo que está en este block en el "base.html.twig" #}
 
 {% block body %}
     {# total items count #}

@@ -62,6 +62,16 @@ class PostsController extends AbstractController
         $post =$em->getRepository(Posts::class)->find($id);
         return $this->render('posts/verPost.html.twig',['post'=>$post]);
     }
+
+    /**
+     * @Route("/postsDelUser", name="posts_Del_User")
+     */
+    public function postsDelUserLoguedo(){
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();//obtengo el user logueado
+        $posts =$em->getRepository(Posts::class)->findBy(['user'=>$user]);//traigo todos los posts del user logueado
+        return $this->render('posts/verPostsDelUser.html.twig',['posts'=>$posts]);
+    }
 }
 
 
