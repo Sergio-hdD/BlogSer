@@ -21,11 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5f839e36-a053-44c2-9c8f-3dee927bc7b9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/PostsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/PostsRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/dashboard/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/posts/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/posts/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/posts/verPost.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/posts/verPost.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/posts/verPostsDelUser.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/posts/verPostsDelUser.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +182,7 @@
       <workItem from="1609699660511" duration="6010000" />
       <workItem from="1609733447374" duration="1644000" />
       <workItem from="1609799149353" duration="9890000" />
-      <workItem from="1609857155960" duration="12589000" />
+      <workItem from="1609857155960" duration="14950000" />
     </task>
     <servers />
   </component>

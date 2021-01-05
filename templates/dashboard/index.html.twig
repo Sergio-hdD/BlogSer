@@ -4,6 +4,7 @@
 
 {% block body %}
     {{ parent() }}{# traigo el código o texto que hay en el block body en el "base.html.twig" #}
+    {{ dump(pagination) }}
     {# total items count #}
     <div class="count">
         {{ pagination.getTotalItemCount }}
