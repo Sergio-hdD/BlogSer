@@ -30,6 +30,14 @@ class PostsRepository extends ServiceEntityRepository
             )->getResult();//"post" es un alias y con el "->getResult()" estoy diciendo que duvuelva lo obtenido de la consulta
     }//Symfony usa dql para hacer consultas
 
+    public function traerQueryDeTodosLosPosts(){
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT post.id, post.titulo, post.foto, post.fecha_publicacion
+                From App:Posts post'
+            );//"post" es un alias y >>>SIN el "->getResult()"<<< solo retorno la consulta (query) en sí
+    }//Symfony usa dql para hacer consultas
+
     // /**
     //  * @return Posts[] Returns an array of Posts objects
     //  */
