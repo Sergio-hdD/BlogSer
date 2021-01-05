@@ -1,8 +1,9 @@
-{% extends 'base.html.twig' %} {# con esta linea le digo que herede todos los block del "base.html.twig" #}
+{% extends 'base.html.twig' %} {# con esta linea le digo que herede todos los linckeos que hay en los block del "base.html.twig" #}
 
-{% block title %}{{ parent() }} - Dashboard{% endblock %} {# con el "parent()" traigo lo que está en este block en el "base.html.twig" #}
+{% block title %}{{ parent() }} - Dashboard{% endblock %} {# con el "parent()" traigo el código o texto que está en el block title en el "base.html.twig" #}
 
 {% block body %}
+    {{ parent() }}{# traigo el código o texto que hay en el block body en el "base.html.twig" #}
     {# total items count #}
     <div class="count">
         {{ pagination.getTotalItemCount }}
