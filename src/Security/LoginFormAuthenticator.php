@@ -97,7 +97,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         }
 
         // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        return new RedirectResponse('dashboard');//Redirecciono a DashboardController a través del name
+        return new RedirectResponse('/BlogSer/public/index.php/');//Redirecciono a DashboardController, debería funcionar solo con '/', pero nooo
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
