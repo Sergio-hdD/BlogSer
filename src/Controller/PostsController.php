@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comentarios;
 use App\Entity\Posts;
 use App\Form\PostsType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,7 +61,11 @@ class PostsController extends AbstractController
     public function verPost($id){
         $em = $this->getDoctrine()->getManager();
         $post =$em->getRepository(Posts::class)->find($id);
-        return $this->render('posts/verPost.html.twig',['post'=>$post]);
+        $comentarios = $em->getRepository(Comentarios::class)->findOneBy(['posts'=>$post]);//Traigo uno por valor de un campo
+        return $this->render('posts/verPost.html.twig', [
+            'post'=>$post,
+            'comentariosDelPost' => $comentarios
+        ]);
     }
 
     /**

@@ -4,7 +4,6 @@
 
 {% block body %}
     {{ parent() }}
-    {{ dump(post)}}
 
     <div class="container bg-white rounded my-3 p-4">
         <div class="d-flex bd-highlight">
@@ -34,5 +33,6 @@
 
         </div>
     </div>
-
+    Comentarios del post
+    {{ dump(comentariosDelPost) }}
 {% endblock %}
