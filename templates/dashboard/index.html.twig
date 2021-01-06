@@ -29,6 +29,9 @@
             <div class="col-md-4">
                 <div class="bg-white rounded p-3 my-3">
                     <h4>Comentarios</h4>
+                        {% for coment in comentariosDelUser %}
+                            {{ coment.comentario }}
+                        {% endfor %}
                 </div>
             </div>
         </div>
