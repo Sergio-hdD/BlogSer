@@ -18,13 +18,13 @@ class DashboardController extends AbstractController
      */
     public function index(PaginatorInterface $paginator, Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
+        $user = $this->getUser();//Obtengo el user logueado
         //agrego seguridad (no recomendada por el framework) para entrar al dashbord
         if($user){//Si hay un usuario loguedo
+            $em = $this->getDoctrine()->getManager();
             $queryPosts = $em->getRepository(Posts::class)->traerQueryDeTodosLosPosts();//Traigo la query de todos los posts, consulta personalizada
-            $comentarios = $em->getRepository(Comentarios::class)->findOneBy(['user'=>$user]);//Traigo uno por valor de un campo
-            //$comentarios_2 = $em->getRepository(Comentarios::class)->buscarComentarios($user->getId());// falta hacer la función
+            //$comentarios = $em->getRepository(Comentarios::class)->findOneBy(['user'=>$user]);//Traigo uno por valor de un campo, trae todos los campos
+            $comentarios = $em->getRepository(Comentarios::class)->traerComentariosDelUser($user->getId());//Trae solo los campos que voy a usar (personlizada)
             $pagination = $paginator->paginate(
                 $queryPosts, /* query NOT result */
                 $request->query->getInt('page', 1), /*page number*/
