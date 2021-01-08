@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Comentarios
 {
+    const COMENTARIO_AGREGADO = 'El comentario fue agregado correctamente';
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -39,6 +40,13 @@ class Comentarios
      */
     private $posts;
 
+    /**
+     * Comentarios constructor.
+     */
+    public function __construct()
+    {
+        $this->fecha_publicacion = new \DateTime(); //inicia con la fecha actual
+    }
 
     public function getId(): ?int
     {
@@ -67,5 +75,37 @@ class Comentarios
         $this->fecha_publicacion = $fecha_publicacion;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+    /**
+     * @param mixed $posts
+     */
+    public function setPosts($posts): void
+    {
+        $this->posts = $posts;
     }
 }

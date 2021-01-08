@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Comentarios;
 use App\Entity\Posts;
+use App\Form\ComentariosType;
 use App\Form\PostsType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,13 +60,32 @@ class PostsController extends AbstractController
     /**
      * @Route("/post/{id}", name="ver_Post")
      */
-    public function verPost($id){
+    public function verPost($id, Request $request, PaginatorInterface $paginator){
         $em = $this->getDoctrine()->getManager();
+        $comentario = new Comentarios();
         $post =$em->getRepository(Posts::class)->find($id);
-        $comentarios = $em->getRepository(Comentarios::class)->findOneBy(['posts'=>$post]);//Traigo uno por valor de un campo
+        //$comentarios = $em->getRepository(Comentarios::class)->findOneBy(['posts'=>$post]);//Traigo uno por valor de un campo, trayendo todos los campos
+        $queryComentarios = $em->getRepository(Comentarios::class)->traerComentariosDelPost($post->getId());
+        $form = $this->createForm(ComentariosType::class, $comentario);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $user = $this->getUser();
+            $comentario->setPosts($post);
+            $comentario->setUser($user);
+            $em->persist($comentario);
+            $em->flush();
+            $this->addFlash('Exito', Comentarios::COMENTARIO_AGREGADO);
+            return $this->redirectToRoute('ver_Post',['id'=>$post->getId()]);
+        }
+        $pagination = $paginator->paginate(
+            $queryComentarios, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            20 /*limit per page*/
+        );
         return $this->render('posts/verPost.html.twig', [
             'post'=>$post,
-            'comentariosDelPost' => $comentarios
+            'formComentarios'=>$form->createView(),
+            'comentariosDelPost' => $pagination
         ]);
     }
 
@@ -78,7 +99,3 @@ class PostsController extends AbstractController
         return $this->render('posts/verPostsDelUser.html.twig',['posts'=>$posts]);
     }
 }
-
-
-
-

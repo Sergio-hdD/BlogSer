@@ -33,6 +33,17 @@ class ComentariosRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function traerComentariosDelPost($post_id){
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT comentario.fecha_publicacion, comentario.comentario, user.nombre
+            FROM App:Comentarios comentario
+            JOIN comentario.user user
+            WHERE comentario.posts =:post_id
+        ')
+            ->setParameter('post_id',$post_id);
+    }
+
     // /**
     //  * @return Comentarios[] Returns an array of Comentarios objects
     //  */

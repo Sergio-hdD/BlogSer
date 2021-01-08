@@ -30,9 +30,26 @@
         <hr>
         <div class="text-justify my-3">
             {{ post.contenido }}
+        </div>
+        <hr>
 
+    </div>
+    <div class="container p-3">
+        {{ form(formComentarios) }}
+        <h3>Comentarios</h3>
+        {% for coment in comentariosDelPost %}
+            <div class="rounded bg-white my-2 p-3 border">
+                <h5>El {{ coment.fecha_publicacion | date }}  >>> >>> >>> {{ coment.nombre }} Dijo:</h5>
+                {# si pusiese "date('d-m-Y')" solo mostraría: ejemplo 08-01-2021 #}
+                <div class="w-100">{{ coment.comentario }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <div class="navigation">
+            {{ knp_pagination_render(comentariosDelPost) }}
         </div>
     </div>
-    Comentarios del post
-    {{ dump(comentariosDelPost) }}
+
 {% endblock %}
