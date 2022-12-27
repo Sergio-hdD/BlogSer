@@ -9,6 +9,7 @@ use App\Form\PostsType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -97,5 +98,30 @@ class PostsController extends AbstractController
         $user = $this->getUser();//obtengo el user logueado
         $posts =$em->getRepository(Posts::class)->findBy(['user'=>$user]);//traigo todos los posts del user logueado
         return $this->render('posts/verPostsDelUser.html.twig',['posts'=>$posts]);
+    }
+
+    /**
+     * @Route("/likes", name="app_likes", methods={"POST"})
+     */
+    public function like(Request $request){
+
+        if($request->isXmlHttpRequest()){ //Si es una petición ajax
+            return new JsonResponse( ['likes' => $this->agregarLikeAlPostYtraerLikes($request)] );
+        }else{
+            throw new \Exception("Estás tratando de hackearme?");   
+        }
+
+    }
+
+    public function agregarLikeAlPostYtraerLikes(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $idPost = $request->get('id');
+        $post = $em->getRepository(Posts::class)->find($idPost);
+        $likes = $post->getLikes();
+        $likes .= $user->getId().','; //a la lista de id's de usuarios que dieron like, agrego el nuevo
+        $post->setLikes($likes);
+        $em->flush();
+        return $likes;
     }
 }
