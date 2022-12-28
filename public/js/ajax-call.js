@@ -3,14 +3,14 @@ function meGusta(idPost) {
 
   $.ajax({
     method: "POST",
-    url: `{{ path('app_likes') }}`,
-    async: true,
-    dataType: "json",
-    data: { id : idPost },
+    url: `{{ path('app_likes', {'id': 'id' }) }}`.replace('id', idPost),
+    dataType: 'json',
     success: function (data) {
-  alert('holaaaaaaaaaaaaaaa')  
-
-      console.log(data['likes']);
+      console.log(data);
+    },
+    error: function (error) {
+      console.log("No se ha podido obtener la información.");
+      console.log(error);
     }
   });
 

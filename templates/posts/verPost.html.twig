@@ -55,9 +55,30 @@
 {% endblock %}
 {% block javascripts %}
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
-    <script src="{{ asset('js/ajax-call.js') }}"></script>
+    <script>
 
+        function meGusta(idPost) {
+
+            $.ajax({
+                method: "POST",
+                url: `{{ path('app_likes') }}`,
+                dataType: 'json',
+                data: {
+                    id: idPost
+                },
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (error) {
+                    console.log("No se ha podido obtener la información.");
+                    console.log(error);
+                }
+            });
+
+        }
+
+    </script>
 
 {% endblock %}
