@@ -55,7 +55,7 @@ class PostsController extends AbstractController
             $em->persist($post);//persisto el objeto post
             $em->flush();//¿¿completa el guardado en la BD??
             return $this->redirectToRoute('dashboard');//redirecciono a DashboardController
-         }
+        }
         return $this->render('posts/index.html.twig', [
             'formulario' => $form->createView()
         ]);
@@ -65,8 +65,8 @@ class PostsController extends AbstractController
      * @Route("/likes", name="app_likes", methods={"POST"})
      */
     public function like(Request $request){
-        if(true){ //Si es una petición ajax
-            return new JsonResponse( ['likes' => $this->agregarLikeAlPostYtraerLikes($request)] );
+        if($request->isXmlHttpRequest()){ //Si es una petición ajax (para probarlo desde postman se debe sacar $request->isXmlHttpRequest() y poner uin "true")
+            return new JsonResponse( ['likes' => $this->modificarLikesDelPostYtraerLikes($request)] );
         }else{
             throw new \Exception("Estás tratando de hackearme?");   
         }
@@ -115,15 +115,22 @@ class PostsController extends AbstractController
         return $this->render('posts/verPostsDelUser.html.twig',['posts'=>$posts]);
     }
 
-    public function agregarLikeAlPostYtraerLikes(Request $request){
+    public function modificarLikesDelPostYtraerLikes(Request $request){
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $idPost = $request->get('id');
+        $idUser = $user->getId();
         $post = $em->getRepository(Posts::class)->find($idPost);
         $likes = $post->getLikes();
-        $likes .= $user->getId().','; //a la lista de id's de usuarios que dieron like, agrego el nuevo
+        if(in_array($idUser, $likes)){
+            $posicionInArray = array_search($idUser, $likes); //Obtenemos la posición
+            unset($likes[$posicionInArray]);//Lo sacamos del array por su posicion
+        }else{
+            array_push($likes, $idUser); //a la lista de id's de usuarios que dieron like, agrego el nuevo
+        }
         $post->setLikes($likes);
         $em->flush();
         return $likes;
     }
+
 }

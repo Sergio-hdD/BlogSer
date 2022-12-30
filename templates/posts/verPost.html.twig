@@ -9,15 +9,25 @@
         <div class="d-flex bd-highlight">
             <div class="p-2 flex-grow-1 bd-highlight">
                 <h3>{{ post.titulo }}</h3>
-                <div class="my-3" style="color:#3282b8;" onclick="meGusta({{ post.id }})">
-                    <i class="fa fa-thumbs-up" style="cursor: pointer"></i><strong style="cursor: pointer"> # Likes</strong>
+                <div class="my-3" id="me_gusta_primero" onclick="meGusta({{ post.id }})">
+                    {% if app.user.id in post.likes %}
+                        <i class="fa fa-thumbs-up" style="cursor: pointer; color:#3282b8;"></i><strong style="cursor: pointer; color:#3282b8;"> Me gusta</strong>
+                    {% else %}
+                        <i class="fa fa-thumbs-up" style="cursor: pointer; color:black;"></i><strong style="cursor: pointer; color:black;"> ¿Te gusta?</strong> 
+                    {% endif %}
+                </div>
+                <div class="my-3" id="me_gusta" style="color:#3282b8; display:none;" onclick="meGusta({{ post.id }})">
+                    <i class="fa fa-thumbs-up" style="cursor: pointer"></i><strong style="cursor: pointer"> Me gusta</strong>
+                </div>
+                <div class="my-3" id="no_me_gusta" style="color:black; display:none;" onclick="meGusta({{ post.id }})">
+                    <i class="fa fa-thumbs-up" style="cursor: pointer"></i><strong style="cursor: pointer"> ¿Te gusta?</strong> 
                 </div>
                 <div style="color:#c3f584;">
                     <i class="far fa-clock"></i> <strong>Fecha de publicación: {{ post.fechapublicacion | date }}</strong>
                     {# el "| date" es un parseo, ya que "fecha_plublicacion" llega como date, pero el template solo muestra String  #}
                     {# en este caso "fecha_publicacion" va sin el guión bajo ya que para traer el post en el
-                       controller usé un "find(id)" y este para traer los atributos usa gets y el
-                       getFechaPublicacion no tiene gión bajo#}
+                    controller usé un "find(id)" y este para traer los atributos usa gets y el
+                    getFechaPublicacion no tiene gión bajo#}
                 </div>
             </div>
             <div class="p-2 bd-highlight">
@@ -60,7 +70,10 @@
     <script>
 
         function meGusta(idPost) {
-
+            
+            $('#me_gusta_primero').fadeOut();
+            var idUserLogueado = {{app.user.id}};
+            
             $.ajax({
                 method: "POST",
                 url: `{{ path('app_likes') }}`,
@@ -69,7 +82,22 @@
                     id: idPost
                 },
                 success: function (data) {
-                    console.log(data);
+                    var siDioLike = false;
+                    data['likes'].forEach(
+                        function(idUserInLikes) {
+                            if(idUserInLikes == idUserLogueado){
+                                $('#no_me_gusta').fadeOut();
+                                $('#me_gusta').fadeIn();
+                                siDioLike = true;
+                            } 
+                        }
+                    );
+
+                    if (!siDioLike){
+                        $('#me_gusta').fadeOut();
+                        $('#no_me_gusta').fadeIn();
+                    }
+                    
                 },
                 error: function (error) {
                     console.log("No se ha podido obtener la información.");

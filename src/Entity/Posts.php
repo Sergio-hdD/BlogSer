@@ -23,7 +23,7 @@ class Posts
     private $titulo;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private $likes;
 
@@ -43,7 +43,7 @@ class Posts
     private $contenido;
 
     /* RELACIONES */
-     
+    
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comentarios", mappedBy="posts")
      */
@@ -59,10 +59,9 @@ class Posts
      */
     public function __construct()
     {
-       $this->likes = '';//inicia vacío, no es lo mismo que null
        $this->fecha_publicacion = new \DateTime(); //inicia con la fecha actual
     }//Los inicializo acá porque los saqué del formulario pero no pueden ser null
-    //Tambien debería estar el user, pero se debe hacer aquí ya que es dinámico, lo hago en
+    //Tambien debería estar el user, pero no se debe hacer aquí ya que es dinámico, lo hago en
     // el PostsController aprovechando que posts tiene un user
     
     public function getId(): ?int
@@ -82,12 +81,14 @@ class Posts
         return $this;
     }
 
-    public function getLikes(): ?string
+    public function getLikes(): array
     {
-        return $this->likes;
+        $likes = $this->likes ? $this->likes : [];
+
+        return $likes;
     }
 
-    public function setLikes(?string $likes): self
+    public function setLikes(array $likes): self
     {
         $this->likes = $likes;
 
