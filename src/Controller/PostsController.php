@@ -27,24 +27,22 @@ class PostsController extends AbstractController
         $post = new Posts();//creo un posts
         $form = $this->createForm(PostsType::class, $post);//a través del formulario tomo los datos para el post
         $form->handleRequest($request);//verifico si el formulario fue enviado
-        if($form->isSubmitted() && $form->isValid()){//Si fue enviado is es válido
-            $brochureFile = $form->get('foto')->getData();
-            if ($brochureFile) {
-                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+        if($form->isSubmitted() && $form->isValid()){//Si fue enviado y es válido
+            
+            $fotoFile = $form->get('foto')->getData();
+            if ($fotoFile) {
+
+                $newFilename = $this->getUser()->getEmail().'_foto_'.(new \DateTime('now'))->format('d_m_Y_H_i_s').'.'.$fotoFile->guessExtension();
 
                 // Move the file to the directory where brochures are stored
                 try {
-                    $brochureFile->move(
-                        $this->getParameter('photos_directory'),
+                    $fotoFile->move(
+                        $this->getParameter('photos_directory'), //Es el directorio dónde se van a guardar los archivos, definido en "config\services.yaml" 
                         $newFilename
                     );
                 } catch (FileException $e) {
                     throw new \Exception('Ups! ha ocurrido un error, sorry :C');
                 }
-
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $post->setFoto($newFilename);
