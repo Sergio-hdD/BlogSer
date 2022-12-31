@@ -3,14 +3,15 @@
 {% block title %}{{ parent() }} - registro{% endblock %}
 
 {% block body %}
-    {% for message in app.flashes('exito') %} {# "exito" es la variable o llave de acceso a través de la cual llega el mensaje desde el controller#}
-        <div class="alert alert-success">
-            {{ message }}
-        </div>
-    {% endfor %}
+
     <div class="container h-100 ">
         <div class="row h-100 justify-content-center align-items-center ">
             <div class="col-6 bg-white rounded my-3 p-5">
+                {% for message in app.flashes('mensaje_error') %} {# "exito" es la variable o llave de acceso a través de la cual llega el mensaje desde el controller#}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
                 <h1>Registro</h1>
                 {{form(formulario)}}
             </div>

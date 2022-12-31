@@ -11,7 +11,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
-    const REGISTRO_EXITOSO = 'Se ha registrado exitosamente';//creo una constante para enviar un mensaje (es buena práctica de programación hacerlo así cuando son cosas que no van a cambiar)
+    const REGISTRO_EXITOSO = 'Se ha registrado exitosamente, ya puede ingresar con sus credenciales.';//creo una constante para enviar un mensaje (es buena práctica de programación hacerlo así cuando son cosas que no van a cambiar)
+    const EMAIL_DUPLICADO = 'El email que intenta ingresar pertenece a otro usuario.';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

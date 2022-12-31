@@ -22,6 +22,10 @@ class RegistroController extends AbstractController
         $form->handleRequest($request);//con esta linea determino si el fomulario fue enviado
         if($form->isSubmitted() && $form->isValid()){//si el formulario fue enviado y el formulario es válido
             $em = $this->getDoctrine()->getManager();//Permite persistir los datos, es decir, guardar, borrar o actualizar en la BD
+            if($em->getRepository(User::class)->findOneBy([ 'email' => $form['email']->getData() ])){ //Si ya hay un usuario con el mismo email
+                $this->addFlash('mensaje_error',User::EMAIL_DUPLICADO);
+                return $this->redirectToRoute('registro');
+            }
             $user->setPassword($passwordEncoder->encodePassword($user, $form['password']->getData()));//seteo para cifrar la password usando la librería
             // con "$form['password']->getData()" obtengo la contraseña que el usuario ingresó a través del formulario (password es el nombre del campo en el formulario)
             $em->persist($user);//Le digo que persista el user creado y que fue cargado con los datos obttenidos a través del formulario
@@ -29,7 +33,7 @@ class RegistroController extends AbstractController
             $this->addFlash('exito',User::REGISTRO_EXITOSO);//Envío un mansaje a través de la variable (o llave de acceso) "exito" avisando que se registró
             //el mensaje anterior lo obtengo por medio de una constante (User::REGISTRO_EXITOSO), es buena práctica de programación hacerlo así cuando siempre va 
             // a ser el mismo mensaje, la constante "REGISTRO_EXITOSO" la creé en la Entity "User"
-            return $this->redirectToRoute('registro');//Redirecciona a una ruta a través del "name" del "@Route...", este caso quiero que redireccion a esta misma función "index()", pero puede redirgir a una función que esté en otro lugar
+            return $this->redirectToRoute('app_login');//Redirecciona a una ruta a través del "name" del "@Route...", este caso quiero que redireccion a esta misma función "index()", pero puede redirgir a una función que esté en otro lugar
         }
         return $this->render('registro/index.html.twig', [
             'formulario' => $form->createView()//paso una vista del formulario
