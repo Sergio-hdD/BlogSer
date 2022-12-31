@@ -72,7 +72,7 @@ class PostsController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="ver_Post", methods={"GET"})
+     * @Route("/{id}", name="ver_Post", methods={"GET","POST"})
      */
     public function verPost($id, Request $request, PaginatorInterface $paginator){
         $em = $this->getDoctrine()->getManager();
@@ -104,7 +104,7 @@ class PostsController extends AbstractController
     }
 
     /**
-     * @Route("/postsDelUser", name="posts_Del_User")
+     * @Route("ver/postsDelUser", name="posts_Del_User")
      */
     public function postsDelUserLoguedo(){
         $em = $this->getDoctrine()->getManager();
