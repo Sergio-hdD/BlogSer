@@ -9,18 +9,9 @@
         <div class="d-flex bd-highlight">
             <div class="p-2 flex-grow-1 bd-highlight">
                 <h3>{{ post.titulo }}</h3>
-                <div class="my-3" id="me_gusta_primero" onclick="meGusta({{ post.id }})">
-                    {% if app.user.id in post.likes %}
-                        <i class="fa fa-thumbs-up" style="cursor: pointer; color:#3282b8;"></i><strong style="cursor: pointer; color:#3282b8;"> Me gusta</strong>
-                    {% else %}
-                        <i class="fa fa-thumbs-up" style="cursor: pointer; color:black;"></i><strong style="cursor: pointer; color:black;"> ¿Te gusta?</strong> 
-                    {% endif %}
-                </div>
-                <div class="my-3" id="me_gusta" style="color:#3282b8; display:none;" onclick="meGusta({{ post.id }})">
-                    <i class="fa fa-thumbs-up" style="cursor: pointer"></i><strong style="cursor: pointer"> Me gusta</strong>
-                </div>
-                <div class="my-3" id="no_me_gusta" style="color:black; display:none;" onclick="meGusta({{ post.id }})">
-                    <i class="fa fa-thumbs-up" style="cursor: pointer"></i><strong style="cursor: pointer"> ¿Te gusta?</strong> 
+                <div class="my-3" id="me_gusta" style="display: inline-block; cursor: pointer;" data-value={{app.user.id in post.likes ? 1 : 0 }}>
+                    <i class="fa fa-thumbs-up"></i>
+                    <strong>{#Acá se agregará el texto con javascripts#}</strong>
                 </div>
                 <div style="color:#c3f584;">
                     <i class="far fa-clock"></i> <strong>Fecha de publicación: {{ post.fechapublicacion | date }}</strong>
@@ -68,12 +59,28 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <script>
+        $( document ).ready(function() {
+            var idPost = {{ post.id }};
+            var divMeGusta = document.getElementById("me_gusta");
+            var textoSiAgregoLike = 'Te gusta';
+            var textoSiNoAgregoLike = '¿Te gusta?';
 
-        function meGusta(idPost) {
-            
-            $('#me_gusta_primero').fadeOut();
+            if(divMeGusta.dataset.value == 1){
+                divMeGusta.style.color = '#3282b8';
+                $('#me_gusta strong').html(textoSiAgregoLike);
+            }else{
+                divMeGusta.style.color = 'black';
+                $('#me_gusta strong').html(textoSiNoAgregoLike);
+            }
+            divMeGusta.onclick = function(){ 
+                meGusta(idPost, divMeGusta, textoSiAgregoLike, textoSiNoAgregoLike)
+            };
+        });
+
+        function meGusta(idPost, divMeGusta, textoSiAgregoLike, textoSiNoAgregoLike) {            
+
             var idUserLogueado = {{app.user.id}};
-            
+
             $.ajax({
                 method: "POST",
                 url: `{{ path('app_likes') }}`,
@@ -86,16 +93,16 @@
                     data['likes'].forEach(
                         function(idUserInLikes) {
                             if(idUserInLikes == idUserLogueado){
-                                $('#no_me_gusta').fadeOut();
-                                $('#me_gusta').fadeIn();
+                                divMeGusta.style.color = '#3282b8';
+                                $('#me_gusta strong').html(textoSiAgregoLike);
                                 siDioLike = true;
                             } 
                         }
                     );
 
                     if (!siDioLike){
-                        $('#me_gusta').fadeOut();
-                        $('#no_me_gusta').fadeIn();
+                        divMeGusta.style.color = 'black';
+                        $('#me_gusta strong').html(textoSiNoAgregoLike);
                     }
                     
                 },
